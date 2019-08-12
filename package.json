@@ -1,6 +1,6 @@
 {
   "name": "hfxworker",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A worker pool using NodeJS worker threads",
   "main": "build/index.js",
   "types": "build/types/index.d.ts",
