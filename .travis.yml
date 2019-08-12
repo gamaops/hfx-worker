@@ -1,0 +1,38 @@
+language: node_js
+node_js:
+- '12'
+if: "(branch != master AND type = pull_request) OR (branch = master AND commit_message !~ /^Release v/) OR tag =~ ^v"
+stages:
+- test
+- Build and Tag
+- deploy
+script:
+- npm run lint
+- npm run test:unit
+- npm run test:e2e
+env:
+- GH_REPOSITORY=gamaops/hfx-worker
+jobs:
+  include:
+  - stage: Build and Tag
+    node_js: '12'
+    name: Build and Tag
+    script:
+    - ".travis/semver.sh"
+    if: tag !~ ^v AND branch = master AND type = push
+  - stage: deploy
+    deploy:
+      provider: npm
+      skip_cleanup: true
+      email: "$NPM_EMAIL"
+      api_key: "$NPM_TOKEN"
+      on:
+        tags: true
+    if: tag =~ ^v AND branch != master AND type = push
+notifications:
+  slack:
+    rooms:
+    - secure: "LKuPzFmXxC332N15s8cU1Q+s3eeJetoYdnI6xspsiJ0ciaVq44Js0UHb5MdGkO0y0gZtu/ega43VvTbY1jYyZ+mmbM0/4NSSDmtAPOxD/Z1eYqGTXfge3m4bj0QtXVWmVWM4KhxgXvwQDuv2vynhPtmpMhIIa0joGEpysZbndQw/w15WsB51DTTaf54SUaZy5QurxsCkejhTcqYvLiZT6ltivsodUFe0RgpIxepvTWPC52AZcWL0eobVvIyM7MTj0HJdtfJspfBVQyplGspwgZOhpfL2+1dAXmdZo9qR2fJP4OJYwBjnQQN4CYUyeNmwvC9vym5x2+iveroinJNxXnZXFrqF1Ctw/KIpKANo6x4duyUc1vTehI1LJ8v6YJ/JOUFTAojq/ebe5Nff8b8B8eXKey5Gc5JvG6b57+GdqTTT+Sd4tBKfSnI+j2sFsqZjOepDw3S8foinfAMNSAw5z94r8X4kYQ3M832ATG7+2o4jlkmRFEyxLAbTLKGTSXewbw2YOv2Emi5DITb/QbycTdQqHAs5DSYpN2mPVoXuwS7Y58TEOBwNtZ3vJnm1T6m+7nz6iw4D94tWTM/ySEiGjHIPBjVgsTu5NrTi+1NqAe2W2/GoYKf18WOTEQDUqpXSlmrNLP9nq+wE9R9Xwu92Kf6qFOuB7dxXuYIUx4E7Ejg="
+    on_success: always
+    on_failure: always
+    on_pull_requests: true

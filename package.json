@@ -1,0 +1,93 @@
+{
+  "name": "hfxworker",
+  "version": "0.0.0",
+  "description": "A worker pool using NodeJS worker threads",
+  "main": "build/index.js",
+  "types": "build/types/index.d.ts",
+  "scripts": {
+    "benchmark": "node test/benchmark/hfx-bus.bench.js",
+    "lint": "tslint --fix -c 'tslint.json' -e './node_modules/**/*' './**/*.ts'",
+    "prebuild": "rimraf build",
+    "serve": "node build/index.js | ./node_modules/.bin/bunyan",
+    "build": "tsc",
+    "start": "tsc -w",
+    "coverage": "nyc npm run test",
+    "test:unit": "mocha 'specs/unit/**/*.spec.ts' -b -r 'ts-node/register' -r 'module-alias/register' -r './specs/utils/module.js'",
+    "test:e2e": "npm run build && mocha 'specs/e2e/**/*.spec.ts' -b -r 'ts-node/register' -r 'module-alias/register'",
+    "test:tdd": "npm run test:unit -- -w --extension ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gamaops/hfx-worker.git"
+  },
+  "_moduleAliases": {
+    "@src": "src"
+  },
+  "files": [
+    "build/"
+  ],
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  },
+  "keywords": [
+    "worker",
+    "pool",
+    "multithreading",
+    "threads",
+    "cpu",
+    "processing",
+    "multithread",
+    "multicore",
+    "parallel"
+  ],
+  "contributors": [
+    {
+      "email": "victorfranlopes@outlook.com",
+      "name": "vflopes",
+      "url": "https://github.com/vflopes"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gamaops/hfx-worker/issues"
+  },
+  "homepage": "https://github.com/gamaops/hfx-worker#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/glob": "^7.1.1",
+    "@types/mocha": "^5.2.7",
+    "@types/mock-require": "^2.0.0",
+    "@types/node": "^12.6.9",
+    "@types/sinon": "^7.0.13",
+    "@types/uuid": "^3.4.5",
+    "benchmark": "^2.1.4",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0",
+    "mock-require": "^3.0.3",
+    "module-alias": "^2.2.1",
+    "nyc": "^14.1.1",
+    "rimraf": "^2.6.3",
+    "sinon": "^7.3.2",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@types/generic-pool": "^3.1.9",
+    "@types/serialize-error": "^4.0.1",
+    "generic-pool": "^3.7.1",
+    "serialize-error": "^4.1.0"
+  }
+}
